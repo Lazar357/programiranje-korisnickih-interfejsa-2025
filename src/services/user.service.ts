@@ -1,50 +1,56 @@
 import { UserModel } from "../models/user.model"
 
-export class UserService{
-    static findUserByEmail(email: string){
-        if(!localStorage.getItem('users'))
+export class UserService {
+    static getUsers(): UserModel[] {
+        if (!localStorage.getItem('users'))
             localStorage.setItem('users', JSON.stringify([
-        {
-            firstName: 'Example',
-            lastName: 'User',
-            email: 'user@example.com',
-            phone: '+38163123123',
-            password: 'user123',
-            destination:'Zagreb',
-            data:[]
-        }
-        
+                {
+                    firstName: 'Example',
+                    lastName: 'User',
+                    email: 'user@example.com',
+                    phone: '+38163123123',
+                    password: 'user123',
+                    destination: 'Zagreb',
+                    data: []
+                }
             ]))
+        return JSON.parse(localStorage.getItem('users')!)
+    }
 
-        const users: UserModel[] = JSON.parse(localStorage.getItem('users')!)
-        const exactUser = users.find(u=> u.email === email)
-        if(!exactUser)
+    static findUserByEmail(email: string) {
+        const users: UserModel[] = this.getUsers()
+        const exactUser = users.find(u => u.email === email)
+
+        if (!exactUser)
             throw new Error('USER_NOT_FOUND')
 
         return exactUser
     }
 
-    static login(email:string, password: string){
+    static login(email: string, password: string) {
         const user = this.findUserByEmail(email)
-        if(!user) throw new Error('USER_NOT_FOUND')
-
-        if(user.password !== password)throw new Error('BAD_CREDENTIALS')
-        
+        if (user.password !== password) {
+            throw new Error('BAD_CREDENTIALS')
+        }
 
         localStorage.setItem('active', user.email)
-        return true
-
     }
 
-    static getActiveUser(){
+    static signup(payload: UserModel) {
+        const users: UserModel[] = this.getUsers()
+        users.push(payload)
+        localStorage.setItem('users', JSON.stringify(users))
+    }
+
+    static getActiveUser() {
         const active = localStorage.getItem('active')
-        if(!active)throw Error('NO_ACTIVE_USER')
-        
-            return this.findUserByEmail(active)
+        if (!active)
+            throw new Error('NO_ACTIVE_USER')
+
+        return this.findUserByEmail(active)
     }
 
-    static logout(){
+    static logout() {
         localStorage.removeItem('active')
     }
 }
-

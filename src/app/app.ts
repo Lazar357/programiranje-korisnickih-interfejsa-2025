@@ -12,7 +12,7 @@ export class App {
   protected readonly title = signal('Lazar');
 
   constructor(protected router: Router){}
-  
+
   hasAuth(){
     if(localStorage.getItem('active'))
       return true
@@ -20,6 +20,7 @@ export class App {
   }
 
   logoutNow(){
+    if(!confirm('Are you sure you want to logout?'))
     UserService.logout()
     this.router.navigate(['/login'])
   }

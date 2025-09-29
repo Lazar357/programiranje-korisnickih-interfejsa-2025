@@ -21,7 +21,7 @@
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                         [attr.data-bs-target]="`#${question.intent}`" aria-expanded="false"
                         [attr.aria-controls]="question.intent">
-                        {{question.text}}
+                        <i class="fa-solid fa-graduation-cap"></i>&nbsp;{{question.text}}
                     </button>
                 </h2>
                 <div [id]="question.intent" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
@@ -34,8 +34,14 @@
 </div>
 }
 @else {
-<div class="loading">
-    <h1>Podaci se ucitavaju!</h1>
-    <p>Molim sacekajte dok se podaci prezuimaju sa servera</p>
+<div class="card">
+    <div class="card-header text-center"><h1>Loading</h1></div>
+    <div class="card-body">
+        <div class="text-center">
+            <h4>Podaci se ucitavaju!</h4>
+            <p>Molim sacekajte dok se podaci prezuimaju sa servera</p>
+        </div>
+    </div>
+    
 </div>
 }
