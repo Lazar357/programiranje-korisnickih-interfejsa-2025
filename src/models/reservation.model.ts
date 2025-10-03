@@ -1,3 +1,5 @@
+import { FlightModel } from "./flight.model"
+
 export interface ReservationModel{
     flightId: number,
     airline: string,
