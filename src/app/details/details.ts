@@ -1,20 +1,26 @@
 import { Component, signal } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { FlightService } from '../../services/flight.service';
-import { RouterLink } from '@angular/router';
 import { FlightModel } from '../../models/flight.model';
 
 @Component({
-  selector: 'app-home',
-  imports: [RouterLink],
-  templateUrl: './home.html',
-  styleUrl: './home.css'
+  selector: 'app-details',
+  imports: [],
+  templateUrl: './details.html',
+  styleUrl: './details.css'
 })
-export class Home {
-  protected flights = signal<FlightModel[]>([])
+export class Details {
+  protected flight = signal<FlightModel | null>(null)
 
-  constructor() {
-    FlightService.getFutureFlights()
-      .then(rsp => this.flights.set(rsp.data))
+  constructor(private route: ActivatedRoute) {
+    this.route.params.subscribe((params: any) => {
+      FlightService.getFlightById(params.id)
+        .then(rsp => this.flight.set(rsp.data))
+    })
+  }
+
+  convertToString() {
+    return JSON.stringify(this.flight(), null, 2)
   }
 
   protected formatDate(iso: string) {
